@@ -4,13 +4,13 @@ var router = express.Router();
 
 //login page - GET
 router.get('/login', function(req, res){
-  res.send('login');
+  res.render('login');
 });
 
 
 //REGISTER PAGE - GET
 router.get('/register', function(req, res){
-  res.send('register');
+  res.render('register');
 });
 
 

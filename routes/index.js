@@ -4,7 +4,7 @@ var router = express.Router();
 
 //login page - GET
 router.get('/', function(req, res){
-  res.send('Index');
+  res.render('index');
 });
 
 
