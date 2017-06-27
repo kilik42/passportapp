@@ -1,29 +1,37 @@
 <%- include('includes/header') %>
 
 
-<div class="container">
+<div class="container reg-page">
+
+  <% if(locals.errors){%>
+      <% errors.forEach(function(error){ %>
+        <div class="alert alert-danger"><%= error.msg %></div>
+
+      <% }) %>
+
+  <% } %>
 
     <form method ="post" action="/users/register" class="form-signin">
       <h2 class="form-signin-heading text-center">User Registration</h2>
-      <label for="inputEmail" class="sr-only">Name</label>
-      <input type="email" id="name" class="form-control" placeholder="Name" required autofocus>
+      <label for="name" class="sr-only">Name</label>
+      <input type="text" id="name" class="form-control" placeholder="Name" value="<%= (!!locals.name)?name:''%>"required autofocus>
       <br>
 
       <label for="inputEmail" class="sr-only">Email</label>
-      <input type="text" id="email" class="form-control" placeholder="Email" required autofocus>
+      <input type="text" id="email" class="form-control" placeholder="Email" value="<%= (!!locals.email)?email:''%>"required autofocus>
       <br>
 
       <label for="inputEmail" class="sr-only">User Name</label>
-      <input type="text" id="username" class="form-control" placeholder="Username" required autofocus>
+      <input type="text" id="username" class="form-control" placeholder="Username" value="<%= (!!locals.username)?username:''%>"required autofocus>
       <br>
 
 
       <label  class="sr-only">Password</label>
-      <input type="password" id="password" class="form-control" placeholder="Password" required>
+      <input type="password" id="password" class="form-control" placeholder="Password"  value="<%= (!!locals.password)?password:''%>"required>
       <br>
 
       <label  class="sr-only">Confirm Password</label>
-      <input type="password" id="password2" class="form-control" placeholder="Confirm Password" required>
+      <input type="password" id="password2" class="form-control" placeholder="Confirm Password"  value="<%= (!!locals.password2)?password2:''%>"required>
 
 
     <p>Have Account?<a href="/users/login"> Login</a></p>

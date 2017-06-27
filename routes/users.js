@@ -29,15 +29,15 @@ router.post('/register', function(req, res){
   var password2             =req.body.password2;
 
 //validation
-  req.checkbody('name', 'Name field is required').notEmpty();
-  req.checkbody('email', 'Email field is required').notEmpty();
-  req.checkbody('email', 'Please use a valid email address').notEmpty();
-  req.checkbody('username', 'User Name field is required').notEmpty();
-  req.checkbody('password', 'Password field is required').notEmpty();
-  req.checkbody('password2', 'Passwords do not match').equals(req.body.password);
+  req.checkBody('name', 'Name field is required').notEmpty();
+  req.checkBody('email', 'Email field is required').notEmpty();
+  req.checkBody('email', 'Please use a valid email address').notEmpty();
+  req.checkBody('username', 'User Name field is required').notEmpty();
+  req.checkBody('password', 'Password field is required').notEmpty();
+  req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
 
 //check for errors
-  var errors = req.ValidationErrors();
+  var errors = req.validationErrors();
 
   if(errors){
     console.log('form has errors...');
@@ -50,7 +50,34 @@ router.post('/register', function(req, res){
       password2: password2
     });
   }else{
-    console.log('success');
+    var newUser = {
+      name: name,
+      email: email,
+      username: username,
+      password: password
+    }
+
+    bcrypt.genSalt(10, function(err, salt){
+      bcrypt.hash(newUser.password, salt, function(err, hash){
+        newUser.password = hash;
+        db.users.insert(newUser, function(err, doc){
+            if(err){
+              res.send(err);
+            }else{
+              console.log('user added...');
+
+              //success messages
+              req.flash('success', 'you are registered and can now log in');
+
+              //redirect after register
+              res.location('/');
+              res.redirect('/');
+            }
+        });
+      });
+    });
+
+
   }
 
 });
