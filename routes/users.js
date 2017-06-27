@@ -71,7 +71,7 @@ router.post('/register', function(req, res){
 
               //redirect after register
               res.location('/');
-              res.redirect('/');
+              res.redirect('/')
             }
         });
       });
@@ -81,5 +81,56 @@ router.post('/register', function(req, res){
   }
 
 });
+
+
+passport.serializeUser(function(user, done) {
+  done(null, user._id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
+
+
+
+
+passport.use(new LocalStrategy{
+  function(username, passwrod, done){
+    db.users.findOne({username: username}, function(err, user){
+      if(err){
+        return done(err);
+      }
+      if (!user){
+        return done(null, false, {message: 'Incorrect username'});
+
+      }
+      bcrypt.compare(password, user.password, function(err, isMatch){
+        if(err){
+          return done(err);
+        }
+        if(isMatch){
+          return done(null, user);
+        }else{
+            return done(null, false, {message: 'Incorrect password'});
+        }
+      });
+    });
+  }
+});
+
+//login -post
+app.post('/login',
+  passport.authenticate('local', { successRedirect: '/',
+                                   failureRedirect: '/users/login',
+                                   failureFlash: 'Invalid Username or Password' }),
+                                   function(req,res){
+                                     console.log('Auth successful');
+                                     res.redirect('/');
+
+                                   }
+);
+
 
 module.exports = router;
